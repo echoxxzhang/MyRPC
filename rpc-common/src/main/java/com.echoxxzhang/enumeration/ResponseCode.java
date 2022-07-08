@@ -3,6 +3,8 @@ package com.echoxxzhang.enumeration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+
+// 定义响应码
 @AllArgsConstructor
 @Getter
 public enum ResponseCode {

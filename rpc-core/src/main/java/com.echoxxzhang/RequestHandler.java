@@ -1,4 +1,4 @@
-package com.echoxxzhang.server;
+package com.echoxxzhang;
 
 import com.echoxxzhang.entity.RpcRequest;
 import com.echoxxzhang.entity.RpcResponse;

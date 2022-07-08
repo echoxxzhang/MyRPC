@@ -10,11 +10,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultServiceRegister implements ServiceRegistry{
+public class DefaultServiceRegistry implements ServiceRegistry{
     // 存储服务关系的注册表，使用currentHashmap来存储
-    private final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
+    private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
     // 保存当前已注册的对象
-    private final Set<String> registerService = ConcurrentHashMap.newKeySet();
+    private static final Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
     public synchronized <T> void register(T service) {
@@ -32,6 +32,7 @@ public class DefaultServiceRegister implements ServiceRegistry{
         log.info("向接口：{} 注册服务：{}", interfaces, serviceName);
     }
 
+    // 从Map中获取服务
     @Override
     public Object getService(String serviceName) {
         Object service = serviceMap.get(serviceName);
