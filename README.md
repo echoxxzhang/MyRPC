@@ -14,18 +14,27 @@
 
 
 
+功能实现：
+
+- 动态代理
+- 使用基于NIO的网络编程框架Netty进行网络传输
+- 序列化与反序列化，使用Kryo替代JDK的序列化机制，性能提升近15倍 
+
+
+
 ## 项目架构
 
 ![](https://cdn.jsdelivr.net/gh/echoxxzhang/blog_img/img/20220707000046.png)
 
 
 
-- 基于Netty的网络传输
-- 实现自定义协议与编解码器，防止粘包
+
+
+实现自定义协议与编解码器，防止粘包
 
 ![](https://cdn.jsdelivr.net/gh/echoxxzhang/blog_img/img/20220709162037.png)
 
-- 使用Kryo替代JDK的序列化机制，性能提升近15倍 
+
 
 
 
@@ -68,6 +77,3 @@ public class NettyTestClient {
 
 ```
 
-Service端运行截图：
-
-![](https://cdn.jsdelivr.net/gh/echoxxzhang/blog_img/img/20220709161721.png)
