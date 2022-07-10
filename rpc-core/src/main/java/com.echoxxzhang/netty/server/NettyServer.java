@@ -23,10 +23,12 @@ public class NettyServer implements RpcServer {
         try {
 
             ServerBootstrap serverBootstrap = new ServerBootstrap();
+
+            // Netty的责任链模式，进行相关配置
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .option(ChannelOption.SO_BACKLOG, 256)
+                    .option(ChannelOption.SO_BACKLOG, 256) // 开启TCP底层心跳检查
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .childOption(ChannelOption.TCP_NODELAY, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -40,7 +42,9 @@ public class NettyServer implements RpcServer {
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
+            // 绑定端口，同步等待
             ChannelFuture future = serverBootstrap.bind(port).sync();
+            // 等待服务端监听端口关闭
             future.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {

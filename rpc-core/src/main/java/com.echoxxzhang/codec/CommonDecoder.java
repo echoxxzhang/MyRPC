@@ -14,13 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-// 解码拦截器，将收到的字节序列还原为实际对象
+// 自定义解码拦截器，将收到的字节序列还原为实际对象
 public class CommonDecoder extends ReplayingDecoder {
     private static final int MAGIC_NUMBER = 0xCAFEBABE;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
         int magic = byteBuf.readInt();
+        // 基于自定义协议进行解码，判断数据包格式是否正确
         if(magic != MAGIC_NUMBER) {
             log.error("不识别的协议包: {}", magic);
             throw new RpcException(RpcError.UNKNOWN_PROTOCOL);
@@ -42,6 +43,7 @@ public class CommonDecoder extends ReplayingDecoder {
             throw new RpcException(RpcError.UNKNOWN_SERIALIZER);
         }
         int length = byteBuf.readInt();
+        // 开始序列化
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
         Object obj = serializer.deserialize(bytes, packageClass);

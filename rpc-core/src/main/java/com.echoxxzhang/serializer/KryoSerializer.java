@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 
 @Slf4j
 public class KryoSerializer implements CommonSerializer{
-    // 由于kryo 可能存在线程安全问题，因此放在ThreadLocal里，一个线程对应一个Kryo
+    // 由于kryo 可能存在线程安全问题，因此放在ThreadLocal里，一个线程对应一个Kryo实例
     public static final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(()->{
 
         Kryo kryo = new Kryo();
@@ -25,13 +25,13 @@ public class KryoSerializer implements CommonSerializer{
         return kryo;
     });
 
-    // 序列化接口
     @Override
     public byte[] serialize(Object obj) {
         try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Output output = new Output(byteArrayOutputStream)){
 
             Kryo kryo = kryoThreadLocal.get();
+            // 将对象序列化为byte数组
             kryo.writeObject(output, obj);
             kryoThreadLocal.remove();
             return output.toBytes();
@@ -43,12 +43,12 @@ public class KryoSerializer implements CommonSerializer{
         }
     }
 
-    // 反序列化接口
     @Override
     public Object deserialize(byte[] bytes, Class<?> clazz) {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
              Input input = new Input(byteArrayInputStream)) {
             Kryo kryo = kryoThreadLocal.get();
+            // 反序列化
             Object obj = kryo.readObject(input, clazz);
             kryoThreadLocal.remove();
             return obj;
